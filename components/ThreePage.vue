@@ -126,7 +126,7 @@ export default {
   left: 0;
   width: 100%;
   height: calc(100% - 100px); /* 減去 top 的 100px */
-  z-index: 5;
+  z-index: 2;
   pointer-events: none;
   background-color: transparent;
 }

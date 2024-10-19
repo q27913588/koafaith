@@ -2,7 +2,8 @@
 import type { DefineComponent, SlotsType } from 'vue'
 type IslandComponent<T extends DefineComponent> = T & DefineComponent<{}, {refresh: () => Promise<void>}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, SlotsType<{ fallback: { error: unknown } }>>
 interface _GlobalComponents {
-      'AppHeader': typeof import("../components/AppHeader.vue")['default']
+      'About': typeof import("../components/About.vue")['default']
+    'AppHeader': typeof import("../components/AppHeader.vue")['default']
     'AppMainPage': typeof import("../components/AppMainPage.vue")['default']
     'ThreePage': typeof import("../components/ThreePage.vue")['default']
     'NuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -28,7 +29,8 @@ interface _GlobalComponents {
     'Body': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
     'NuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
-      'LazyAppHeader': typeof import("../components/AppHeader.vue")['default']
+      'LazyAbout': typeof import("../components/About.vue")['default']
+    'LazyAppHeader': typeof import("../components/AppHeader.vue")['default']
     'LazyAppMainPage': typeof import("../components/AppMainPage.vue")['default']
     'LazyThreePage': typeof import("../components/ThreePage.vue")['default']
     'LazyNuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -60,6 +62,7 @@ declare module 'vue' {
   export interface GlobalComponents extends _GlobalComponents { }
 }
 
+export const About: typeof import("../components/About.vue")['default']
 export const AppHeader: typeof import("../components/AppHeader.vue")['default']
 export const AppMainPage: typeof import("../components/AppMainPage.vue")['default']
 export const ThreePage: typeof import("../components/ThreePage.vue")['default']
@@ -86,6 +89,7 @@ export const Html: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const LazyAbout: typeof import("../components/About.vue")['default']
 export const LazyAppHeader: typeof import("../components/AppHeader.vue")['default']
 export const LazyAppMainPage: typeof import("../components/AppMainPage.vue")['default']
 export const LazyThreePage: typeof import("../components/ThreePage.vue")['default']

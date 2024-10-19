@@ -1,14 +1,23 @@
-<script>
-import AppHeader from '~/components/AppHeader.vue'
-</script>
-
-
 <template>
   <div>
     <AppHeader />
+    <AppMainPage />
     <ThreePage />
-    <AppMainPage/>
+
     <NuxtRouteAnnouncer />
-    <NuxtWelcome />
   </div>
 </template>
+
+<script>
+import AppHeader from '~/components/AppHeader.vue'
+import AppMainPage from '~/components/AppMainPage.vue'
+import ThreePage from '~/components/ThreePage.vue'
+
+export default {
+  components: {
+    AppHeader,
+    AppMainPage,
+    ThreePage
+  }
+}
+</script>

@@ -59,7 +59,7 @@ export default {
   font-family: Avenir Next LT W01 Bold;
 
 }
-.sound a.on {
-  color: $highlight-orange; /* 使用定義的顏色變數 */
-}
+// .sound a.on {
+//   color: $highlight-orange; /* 使用定義的顏色變數 */
+// }
 </style>
