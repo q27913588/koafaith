@@ -1,7 +1,7 @@
-<template class="z-20"> 
-  <div >
+<template>
+  <div>
     <transition name="height-transition">
-      <div :class="divClass" class="flex bg-gray-200 transition-all duration-500 ease-in-out">
+      <div :class="divClass" class="flex transition-all duration-500 ease-in-out  ">
         <div ref="logoContainer" class="flex-1 relative"></div>
       </div>
     </transition>
@@ -104,9 +104,29 @@ export default {
       );
 
       // 延遲觸發高度變化
-      setTimeout(() => {
-        isExpanded.value = false;
-      }, 1000); // 1秒後觸發
+      
+      isExpanded.value = false;
+      // 動畫相機位置
+      const animateCameraPosition = () => {
+        const start = camera.position.y;
+        const end = -80;
+        const duration = 1000; // 動畫持續時間（毫秒）
+        const startTime = performance.now();
+
+        const animate = (time) => {
+          const elapsed = time - startTime;
+          const progress = Math.min(elapsed / duration,0.2);
+          camera.position.y = start + (end - start) * progress;
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+
+        requestAnimationFrame(animate);
+      };
+
+      animateCameraPosition();
     });
 
     return {

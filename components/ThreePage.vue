@@ -45,7 +45,7 @@ export default {
       }
 
       const geometry = new THREE.BufferGeometry();
-      const particlesCount = 10000;
+      const particlesCount = 5000;
       const positions = new Float32Array(particlesCount * 3);
       const colors = new Float32Array(particlesCount * 3);
 
@@ -74,7 +74,7 @@ export default {
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
       const material = new THREE.PointsMaterial({
-        size: 0.2,
+        size: 0.1,
         map: createCircleTexture(),
         transparent: true,
         alphaTest: 0.5,
