@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+// 定義顏色變數
+$highlight-orange: #f87171; //嗨賴橘
+$bear-blue : #19336B ; //熊藍
+$bear-gray : #DCDCDC ; //熊灰
+$bear-orange : #F46C1D;
+
+.bg-gray{
+    background-color: $bear-gray;
+}
+
+@font-face {
+  font-family: 'Avenir Next LT W01 Bold';
+  src: url('~/assets/static/fonts/14c73713-e4df-4dba-933b-057feeac8dd1.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Avenir Next LT W01 Demi';
+  src: url('~/assets/static/fonts/627fbb5a-3bae-4cd9-b617-2f923e29d55e.woff2') format('woff2');
+} 
+
+html, body {
+    font-family: 'Avenir Next LT W01 Demi';
+}
+
+
+
