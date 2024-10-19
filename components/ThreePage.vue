@@ -74,7 +74,7 @@ export default {
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
       const material = new THREE.PointsMaterial({
-        size: 0.3,
+        size: 0.2,
         map: createCircleTexture(),
         transparent: true,
         alphaTest: 0.5,
@@ -126,7 +126,7 @@ export default {
   left: 0;
   width: 100%;
   height: calc(100% - 100px); /* 減去 top 的 100px */
-  z-index: 1000;
+  z-index: 5;
   pointer-events: none;
   background-color: transparent;
 }
