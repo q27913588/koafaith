@@ -1,6 +1,6 @@
 <template>
-    <div class="container mx-auto p-4 text-about">
-      <div class="bg-white p-6 text-center">
+    <div class="container mx-auto p-4 text-about ">
+      <div class=" p-6 text-center">
         <h2 class="text-5xl mb-2">ABOUT</h2>
         <div class="text-body p-5 max-w-4xl mx-auto">
           <p class="mb-4">

@@ -1,11 +1,36 @@
 <template>
-  <div>
+  <div class="relative">
+    
     <transition name="height-transition">
-      <div :class="divClass" class="flex transition-all duration-500 ease-in-out  ">
-        <div ref="logoContainer" class="flex-1 relative"></div>
+      <div :class="divClass" class="flex transition-all duration-500 ease-in-out ">
+        <!-- <div ref="logoContainer" class="flex-1 relative hidden md:block"></div> -->
+        <div class=" absolute top-40 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <img src="/assets/logo-black.png" alt="Your Image" class="w-full h-auto max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl">
+        </div>
+
       </div>
+      
     </transition>
-    <component :is="currentPageComponent" />
+
+    <div class="w-full flex justify-center mt-10">
+      <ul class="flex space-x-12 items-center font">
+        <li>
+          <a href="#" @click="setCurrentPage('About')" :class="{'text-gray-900 scale-125 underline': currentPage === 'About'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">ABOUT</a>
+        </li>
+        <li>
+          <a href="#" @click="setCurrentPage('Project')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Project'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">PROJECT</a>
+        </li>
+        <li>
+          <a href="#" @click="setCurrentPage('Service')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Service'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">SERVICE</a>
+        </li>
+        <li>
+          <a href="#" @click="setCurrentPage('Contact')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Contact'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">CONTACT</a>
+        </li>
+      </ul>
+
+    </div>
+
+    <component class="mt-10" :is="currentPageComponent" />
   </div>
 </template>
 
@@ -13,14 +38,20 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import * as THREE from 'three';
 import About from './About.vue';
+import Project from './Project.vue';
+import Service from './Service.vue';
+import Contact from './Contact.vue';
 
 export default {
   name: 'AppMainPage',
   components: {
-    About
+    About,
+    Project,
+    Service,
+    Contact
   },
   setup() {
-    const logoContainer = ref(null);
+
     const currentPage = ref('About');
     const isExpanded = ref(true);
 
@@ -32,108 +63,16 @@ export default {
       return isExpanded.value ? 'h-96' : 'h-72';
     });
 
-    onMounted(() => {
-      if (!logoContainer.value) {
-        console.error('logoContainer ref is not defined');
-        return;
-      }
+    const setCurrentPage = (page) => {
+      currentPage.value = page;
+    };
 
-      // 初始化 Three.js 場景
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ alpha: true });
-      renderer.setPixelRatio(window.devicePixelRatio); // 設置像素比率
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(0x000000, 0); // 確保背景透明
-      logoContainer.value.appendChild(renderer.domElement);
-
-      camera.position.z = 120;
-      camera.position.y = -50;
-
-      // 添加 3D logo
-      const textureLoader = new THREE.TextureLoader();
-      textureLoader.load(
-        '/assets/logo-black.png',
-        (logoTexture) => {
-          const image = logoTexture.image;
-          const width = image.width / 5.5;
-          const height = image.height / 5.5;
-
-          const logoMaterial = new THREE.MeshBasicMaterial({ map: logoTexture, transparent: true });
-          const logoGeometry = new THREE.PlaneGeometry(width, height); // 使用圖片的原始尺寸
-          const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
-          scene.add(logoMesh);
-
-          const onMouseMove = (event) => {
-            const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            const rotateX = mouseY * 0.1; // 調整旋轉幅度
-            const rotateY = mouseX * 0.1; // 調整旋轉幅度
-
-            logoMesh.rotation.x = rotateX;
-            logoMesh.rotation.y = rotateY;
-          };
-
-          document.addEventListener('mousemove', onMouseMove);
-
-          const onResize = () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-          };
-
-          window.addEventListener('resize', onResize);
-
-          const animate = () => {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-          };
-
-          animate();
-
-          onBeforeUnmount(() => {
-            document.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('resize', onResize);
-          });
-        },
-        undefined,
-        (error) => {
-          console.error('Error loading texture:', error);
-        }
-      );
-
-      // 延遲觸發高度變化
-      
-      isExpanded.value = false;
-      // 動畫相機位置
-      const animateCameraPosition = () => {
-        const start = camera.position.y;
-        const end = -80;
-        const duration = 1000; // 動畫持續時間（毫秒）
-        const startTime = performance.now();
-
-        const animate = (time) => {
-          const elapsed = time - startTime;
-          const progress = Math.min(elapsed / duration,0.2);
-          camera.position.y = start + (end - start) * progress;
-
-          if (progress < 1) {
-            requestAnimationFrame(animate);
-          }
-        };
-
-        requestAnimationFrame(animate);
-      };
-
-      animateCameraPosition();
-    });
-
+    
     return {
-      logoContainer,
       currentPage,
       currentPageComponent,
-      divClass
+      divClass,
+      setCurrentPage
     };
   }
 };
@@ -148,5 +87,9 @@ export default {
 }
 .height-transition-enter-to, .height-transition-leave-from {
   height: 18rem; /* Tailwind CSS class h-72 */
+}
+
+.font {
+  font-family: 'Avenir Next LT W01 Bold';
 }
 </style>

@@ -122,11 +122,9 @@ export default {
 <style scoped>
 .three-page {
   position: fixed;
-  top: 100px; /* 固定在距離視窗頂部 100px 的位置 */
   left: 0;
   width: 100%;
-  height: calc(100% - 100px); /* 減去 top 的 100px */
-  z-index: 2;
+  z-index: 0;
   pointer-events: none;
   background-color: transparent;
 }

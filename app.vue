@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="bg-gray min-h-screen  flex flex-col " >
     <AppHeader />
-    <AppMainPage />
     <ThreePage />
+    <AppMainPage />
+
 
     <NuxtRouteAnnouncer />
   </div>
