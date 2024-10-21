@@ -4,12 +4,12 @@
       <div :class="divClass" class="flex transition-all duration-500 ease-in-out">
         <!-- <div ref="logoContainer" class="flex-1 relative hidden md:block"></div> -->
         <div class="absolute top-40 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <img src="/assets/logo-black.png" alt="Your Image" class="w-full h-auto max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl">
+          <img src="/assets/logo-black.svg" alt="logo" class=" h-auto max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl">
         </div>
       </div>
     </transition>
 
-    <div class="w-full flex justify-center mt-10">
+    <div ref="menu" class="w-full flex justify-center mt-10">
       <ul class="flex space-x-12 items-center font">
         <li>
           <a href="#" @click="setCurrentPage('About')" :class="{'text-gray-900 scale-125 underline': currentPage === 'About'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">ABOUT</a>
@@ -18,23 +18,23 @@
           <a href="#" @click="setCurrentPage('Project')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Project'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">PROJECT</a>
         </li>
         <li>
-          <a href="#" @click="setCurrentPage('Service')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Service'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">SERVICE</a>
-        </li>
-        <li>
           <a href="#" @click="setCurrentPage('Contact')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Contact'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">CONTACT</a>
         </li>
+        <li>
+          <a href="#" @click="setCurrentPage('Service')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Service'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">GAME</a>
+        </li>
+     
       </ul>
     </div>
 
     <transition name="fade" mode="default">
       <component :is="currentPageComponent" key="currentPage" class="mt-10" />
     </transition>
-    
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import About from './About.vue';
 import Project from './Project.vue';
 import Service from './Service.vue';
@@ -51,6 +51,7 @@ export default {
   setup() {
     const currentPage = ref('About');
     const isExpanded = ref(true);
+    const menu = ref(null);
 
     const currentPageComponent = computed(() => {
       return currentPage.value;
@@ -62,13 +63,22 @@ export default {
 
     const setCurrentPage = (page) => {
       currentPage.value = page;
+      setTimeout(() => {
+        nextTick(() => {
+        if (menu.value) {
+          menu.value.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+      }, 300);
+    
     };
 
     return {
       currentPage,
       currentPageComponent,
       divClass,
-      setCurrentPage
+      setCurrentPage,
+      menu
     };
   }
 };
@@ -86,12 +96,11 @@ export default {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.25s ease;
+  transition: opacity 0.5s ease;
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
-
 
 .font {
   font-family: 'Avenir Next LT W01 Bold';

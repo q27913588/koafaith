@@ -1,34 +1,183 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
-      <div v-for="(image, index) in images" :key="index" class="relative group max-h-600">
-        <img :src="image.src" :alt="image.alt" class="w-full h-full object-cover max-h-600">
-        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-75 transition duration-300 flex items-center justify-center">
-          <span class="text-white text-lg opacity-0 group-hover:opacity-50 transition duration-300">{{ image.text }}</span>
+    <div ref="gameContainer" class="w-full h-screen relative">
+      <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-4">
+        <div v-for="(direction, index) in directions" :key="index" :class="['w-16 h-16 flex items-center justify-center text-2xl', { 'bg-yellow-500': activeKey === direction, 'bg-gray-700 text-white': activeKey !== direction }]">
+          {{ direction }}
         </div>
       </div>
+      <div ref="line" class="absolute top-1/2 left-0 w-full h-1 bg-gray-800"></div>
+      <div class="absolute top-4 left-1/2 transform -translate-x-1/2 text-black text-3xl">Score: {{ score }}</div>
     </div>
   </template>
   
   <script>
+  import * as THREE from 'three';
+  import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+  import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+  import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+  
   export default {
     name: 'Service',
-    data() {
+    setup() {
+      const gameContainer = ref(null);
+      const directions = ref(['A', 'S', 'D', 'F']);
+      const score = ref(0);
+      const activeKey = ref(null);
+      let scene, camera, renderer, fallingObjects, clock, font, particles, line;
+  
+      const initThreeJS = () => {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        gameContainer.value.appendChild(renderer.domElement);
+  
+        camera.position.z = 5;
+  
+        fallingObjects = [];
+        particles = [];
+        clock = new THREE.Clock();
+  
+        const loader = new FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (loadedFont) => {
+          font = loadedFont;
+          animate();
+        });
+  
+        // Create 3D line
+        const lineGeometry = new THREE.BoxGeometry(10, 0.1, 0.1);
+        const lineMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+        line = new THREE.Mesh(lineGeometry, lineMaterial);
+        line.position.y = 0;
+        scene.add(line);
+      };
+  
+      const createFallingObject = () => {
+        const direction = directions.value[Math.floor(Math.random() * directions.value.length)];
+        const textGeometry = new TextGeometry(direction, {
+          font: font,
+          size: 0.5,
+          depth: 0.2,
+        });
+        const material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+        const textMesh = new THREE.Mesh(textGeometry, material);
+  
+        textMesh.position.x = (Math.random() - 0.5) * 4;
+        textMesh.position.y = 5;
+        textMesh.direction = direction;
+  
+        fallingObjects.push(textMesh);
+        scene.add(textMesh);
+      };
+  
+      const createParticles = (position) => {
+        const particleCount = 100;
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
+  
+        const positions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+          positions[i * 3] = position.x + (Math.random() - 0.5) * 0.5;
+          positions[i * 3 + 1] = position.y + (Math.random() - 0.5) * 0.5;
+          positions[i * 3 + 2] = position.z + (Math.random() - 0.5) * 0.5;
+        }
+  
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
+  
+        particles.push(particleSystem);
+        scene.add(particleSystem);
+  
+        setTimeout(() => {
+          scene.remove(particleSystem);
+          particles.splice(particles.indexOf(particleSystem), 1);
+        }, 1000);
+      };
+  
+      const animate = () => {
+        requestAnimationFrame(animate);
+  
+        const delta = clock.getDelta();
+  
+        fallingObjects.forEach((obj, index) => {
+          obj.position.y -= delta * 2;
+  
+          if (obj.position.y < -5) {
+            scene.remove(obj);
+            fallingObjects.splice(index, 1);
+          }
+        });
+  
+        particles.forEach((particleSystem) => {
+          particleSystem.geometry.attributes.position.array.forEach((_, i) => {
+            particleSystem.geometry.attributes.position.array[i * 3 + 1] -= delta * 2;
+          });
+          particleSystem.geometry.attributes.position.needsUpdate = true;
+        });
+  
+        renderer.render(scene, camera);
+      };
+  
+      const handleKeyPress = (event) => {
+        console.log('Key pressed:', event.key);
+  
+        const keyMap = {
+          KeyA: 'A',
+          KeyS: 'S',
+          KeyD: 'D',
+          KeyF: 'F',
+          a: 'A',
+          s: 'S',
+          d: 'D',
+          f: 'F',
+        };
+  
+        const direction = keyMap[event.key];
+        console.log('Mapped direction:', direction);
+        if (!direction) return;
+  
+        activeKey.value = direction;
+  
+        fallingObjects.forEach((obj, index) => {
+          console.log('Checking object:', obj.direction, obj.position.y);
+          if (obj.position.y < 0.25 && obj.position.y > -0.25 && obj.direction === direction) {
+            console.log('Object hit:', obj.direction);
+            createParticles(obj.position);
+            scene.remove(obj);
+            fallingObjects.splice(index, 1);
+            score.value++;
+          }
+        });
+  
+        nextTick(() => {
+          activeKey.value = null;
+        });
+      };
+  
+      onMounted(() => {
+        initThreeJS();
+        window.addEventListener('keydown', handleKeyPress);
+        setInterval(createFallingObject, 1000);
+      });
+  
+      onBeforeUnmount(() => {
+        window.removeEventListener('keydown', handleKeyPress);
+      });
+  
       return {
-        images: [
-          { src: '/assets/project-1.png', alt: 'Image 1', text: 'Image 1' },
-          { src: 'https://trendy.taipei/wp-content/uploads/2024/06/Taipei-Codefest2024.jpg', alt: 'Image 2', text: 'Image 2' },
-          { src: 'https://trendy.taipei/wp-content/uploads/2024/06/Taipei-Codefest2024.jpg', alt: 'Image 3', text: 'Image 3' },
-          { src: 'https://trendy.taipei/wp-content/uploads/2024/06/Taipei-Codefest2024.jpg', alt: 'Image 4', text: 'Image 4' },
-          { src: 'https://trendy.taipei/wp-content/uploads/2024/06/Taipei-Codefest2024.jpg', alt: 'Image 5', text: 'Image 5' },
-          { src: 'https://trendy.taipei/wp-content/uploads/2024/06/Taipei-Codefest2024.jpg', alt: 'Image 6', text: 'Image 6' },
-        ],
+        gameContainer,
+        directions,
+        score,
+        activeKey,
       };
     },
   };
   </script>
   
   <style scoped>
-  .max-h-600 {
-    max-height: 600px;
+  body {
+    margin: 0;
+    overflow: hidden;
   }
   </style>

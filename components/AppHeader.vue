@@ -20,8 +20,6 @@
         <div>
           
           <audio preload="auto" loop>
-            <source src="https://www.hys-inc.jp/admin/wp-content/themes/hys/assets/sound/sound.mp3" type="audio/mp3">
-            <source src="https://www.hys-inc.jp/admin/wp-content/themes/hys/assets/sound/sound.ogg" type="audio/ogg">
           </audio>
         </div>
 
