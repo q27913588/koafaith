@@ -45,7 +45,7 @@ export default {
       }
 
       const geometry = new THREE.BufferGeometry();
-      const particlesCount = 5000;
+      const particlesCount = 8000;
       const positions = new Float32Array(particlesCount * 3);
       const colors = new Float32Array(particlesCount * 3);
 
