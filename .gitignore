@@ -2,3 +2,5 @@
 node_modules/*
 /.output
 /.nuxt
+/.nuxt
+*.tar
