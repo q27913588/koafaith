@@ -20,9 +20,9 @@
         <li>
           <a href="#" @click="setCurrentPage('Contact')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Contact'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">CONTACT</a>
         </li>
-        <li>
+        <!-- <li>
           <a href="#" @click="setCurrentPage('Service')" :class="{'text-gray-900 scale-125 underline': currentPage === 'Service'}" class="block text-gray-700 hover:text-gray-900 hover:scale-125 hover:underline transition-transform duration-300">GAME</a>
-        </li>
+        </li> -->
       </ul>
     </div>
 
