@@ -48,18 +48,25 @@ export default {
       const particlesCount = 8000;
       const positions = new Float32Array(particlesCount * 3);
       const colors = new Float32Array(particlesCount * 3);
+      const targetPositions = new Float32Array(particlesCount * 3);
 
       const radius = 40;
       for (let i = 0; i < particlesCount; i++) {
+        // 初始位置在外部隨機位置
+        positions[i * 3] = (Math.random() - 0.5) * 200;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+
+        // 目標位置在球體上
         const u = Math.random() * 2 * Math.PI;
         const v = (Math.random() - 0.5) * 2;
 
         const x = (1 + (v / 2) * Math.cos(u / 2)) * Math.cos(u) * radius;
         const y = (1 + (v / 2) * Math.cos(u / 2)) * Math.sin(u) * radius;
         const z = (v / 2) * Math.sin(u / 2) * radius;
-        positions[i * 3] = x;
-        positions[i * 3 + 1] = y;
-        positions[i * 3 + 2] = z;
+        targetPositions[i * 3] = x;
+        targetPositions[i * 3 + 1] = y;
+        targetPositions[i * 3 + 2] = z;
 
         const colorFactor = (v + 1) / 2;
         const black = { r: 0, g: 0, b: 0 };
@@ -72,6 +79,7 @@ export default {
 
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      geometry.setAttribute('targetPosition', new THREE.BufferAttribute(targetPositions, 3));
 
       const material = new THREE.PointsMaterial({
         size: 0.1,
@@ -93,6 +101,14 @@ export default {
 
         particles.rotation.x += rotationSpeedX;
         particles.rotation.y += rotationSpeedY;
+
+        // 更新位置
+        const positions = geometry.attributes.position.array;
+        const targetPositions = geometry.attributes.targetPosition.array;
+        for (let i = 0; i < positions.length; i++) {
+          positions[i] += (targetPositions[i] - positions[i]) * 0.02; // 緩動效果
+        }
+        geometry.attributes.position.needsUpdate = true;
 
         renderer.render(scene, camera);
       };
@@ -124,10 +140,14 @@ export default {
   position: fixed;
   left: 0;
   width: 100%;
+  height: 100%;
   z-index: 0;
   pointer-events: none;
   background-color: transparent;
 }
 
-
+.three-container {
+  width: 100%;
+  height: 100%;
+}
 </style>

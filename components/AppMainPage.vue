@@ -4,7 +4,7 @@
       <div :class="divClass" class="flex transition-all duration-500 ease-in-out">
         <!-- <div ref="logoContainer" class="flex-1 relative hidden md:block"></div> -->
         <div class="absolute top-40 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <img src="/assets/logo-orange.svg" alt="logo" class="h-auto w-[450px] md:w-[400px] lg:w-[350px] xl:w-[550px]">
+          <!-- <img src="/assets/logo-orange.svg" alt="logo" class="h-auto w-[450px] md:w-[400px] lg:w-[350px] xl:w-[550px]"> -->
         </div>
       </div>
     </transition>
