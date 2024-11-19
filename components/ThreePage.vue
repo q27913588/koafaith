@@ -69,8 +69,8 @@ export default {
         targetPositions[i * 3 + 2] = z;
 
         const colorFactor = (v + 1) / 2;
-        const black = { r: 0, g: 0, b: 0 };
-        const gray = { r: 0.5, g: 0.5, b: 0.5 };
+        const black = { r: 1, g: 1, b: 1 };
+        const gray = { r: 1, g: 1, b: 1 };
 
         colors[i * 3] = black.r * (1 - colorFactor) + gray.r * colorFactor;
         colors[i * 3 + 1] = black.g * (1 - colorFactor) + gray.g * colorFactor;
@@ -82,7 +82,7 @@ export default {
       geometry.setAttribute('targetPosition', new THREE.BufferAttribute(targetPositions, 3));
 
       const material = new THREE.PointsMaterial({
-        size: 0.1,
+        size: 0.2,
         map: createCircleTexture(),
         transparent: true,
         alphaTest: 0.5,

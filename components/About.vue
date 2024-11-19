@@ -49,6 +49,7 @@ export default {
 @import '~/assets/css/main.scss';
 .text-about {
   font-family: Avenir Next LT W01 Bold;
+  color:white;
 }
 .text-body {
   font-family: Avenir Next LT W01 Demi;

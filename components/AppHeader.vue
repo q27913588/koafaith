@@ -50,7 +50,7 @@ export default {
 <style scoped lang="scss">
 @import '~/assets/css/main.scss';
 .text-header {
-  
+  color: white;
   font-family: Avenir Next LT W01 Bold;
 
 }

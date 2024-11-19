@@ -1,7 +1,7 @@
 <template>
     <div class="container mx-auto p-4 text-project mt-10">
       <div class="p-6 text-center">
-        <h2 class="text-5xl mb-2">PROJECT</h2>
+        <h2 class="text-5xl mb-2 text-white">PROJECT</h2>
       </div>
     </div>
   
@@ -58,13 +58,13 @@
   .text-project {
     font-family: 'Avenir Next LT W01 Bold';
   }
-  
+/*   
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.25s ease;
   }
   .fade-enter-from, .fade-leave-to {
     opacity: 0;
-  }
+  } */
   
   .group-hover h3 {
     transition: opacity 0.25s ease;
