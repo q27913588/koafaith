@@ -24,7 +24,7 @@
         </div>
 
         <!-- 社交媒體連結 -->
-        <ul class="sns flex space-x-4">
+        <!-- <ul class="sns flex space-x-4">
           <li>
             <a href="" target="_blank" class="tw text-sm hover:text-gray-400">Twitter</a>
           </li>
@@ -35,7 +35,7 @@
           <li>
             <a href="" target="_blank" class="tb text-sm hover:text-gray-400">Tumblr</a>
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
   </header>

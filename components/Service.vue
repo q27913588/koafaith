@@ -5,8 +5,12 @@
           {{ direction }}
         </div>
       </div>
-      <div ref="line" class="absolute top-1/2 left-0 w-full h-1 bg-gray-800"></div>
+      <div ref="line" class="absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-black to-gray-500"></div>
       <div class="absolute top-4 left-1/2 transform -translate-x-1/2 text-black text-3xl">Score: {{ score }}</div>
+      <div v-if="gameOver" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-4xl">
+        Game Over
+        <button @click="restartGame" class="ml-4 px-4 py-2 bg-white text-black rounded">Restart</button>
+      </div>
     </div>
   </template>
   
@@ -20,10 +24,12 @@
     name: 'Service',
     setup() {
       const gameContainer = ref(null);
-      const directions = ref(['A', 'S', 'D', 'F']);
+      const directions = ref(['K', 'O', 'A', 'F']);
       const score = ref(0);
       const activeKey = ref(null);
-      let scene, camera, renderer, fallingObjects, clock, font, particles, line;
+      const gameOver = ref(false);
+      const missedCount = ref(0);
+      let scene, camera, renderer, fallingObjects, clock, font, particles, line, speed;
   
       const initThreeJS = () => {
         scene = new THREE.Scene();
@@ -38,6 +44,7 @@
         fallingObjects = [];
         particles = [];
         clock = new THREE.Clock();
+        speed = 2;
   
         const loader = new FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (loadedFont) => {
@@ -96,22 +103,28 @@
       };
   
       const animate = () => {
+        if (gameOver.value) return;
+  
         requestAnimationFrame(animate);
   
         const delta = clock.getDelta();
   
         fallingObjects.forEach((obj, index) => {
-          obj.position.y -= delta * 2;
+          obj.position.y -= delta * speed;
   
           if (obj.position.y < -5) {
             scene.remove(obj);
             fallingObjects.splice(index, 1);
+            missedCount.value++;
+            if (missedCount.value >= 5) {
+              gameOver.value = true;
+            }
           }
         });
   
         particles.forEach((particleSystem) => {
           particleSystem.geometry.attributes.position.array.forEach((_, i) => {
-            particleSystem.geometry.attributes.position.array[i * 3 + 1] -= delta * 2;
+            particleSystem.geometry.attributes.position.array[i * 3 + 1] -= delta * speed;
           });
           particleSystem.geometry.attributes.position.needsUpdate = true;
         });
@@ -120,16 +133,18 @@
       };
   
       const handleKeyPress = (event) => {
+        if (gameOver.value) return;
+  
         console.log('Key pressed:', event.key);
   
         const keyMap = {
+          KeyK: 'K',
+          KeyI: 'O',
           KeyA: 'A',
-          KeyS: 'S',
-          KeyD: 'D',
           KeyF: 'F',
+          k: 'k',
+          o: 'O',
           a: 'A',
-          s: 'S',
-          d: 'D',
           f: 'F',
         };
   
@@ -147,12 +162,22 @@
             scene.remove(obj);
             fallingObjects.splice(index, 1);
             score.value++;
+            speed += 0.1; // 增加掉落速度
           }
         });
   
         nextTick(() => {
           activeKey.value = null;
         });
+      };
+  
+      const restartGame = () => {
+        gameOver.value = false;
+        score.value = 0;
+        missedCount.value = 0;
+        speed = 2;
+        fallingObjects.forEach((obj) => scene.remove(obj));
+        fallingObjects = [];
       };
   
       onMounted(() => {
@@ -170,6 +195,8 @@
         directions,
         score,
         activeKey,
+        gameOver,
+        restartGame,
       };
     },
   };

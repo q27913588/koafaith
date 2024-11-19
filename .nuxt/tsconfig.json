@@ -92,11 +92,8 @@
       "#tailwind-config": [
         "./tailwind.config"
       ],
-      "#tailwind-config/*": [
-        "./tailwind.config/*"
-      ],
       "#app-manifest": [
-        "./manifest/meta/dev.json"
+        "./manifest/meta/184ea140-51b0-47fb-b508-6ebc8453d106.json"
       ],
       "#build": [
         "."
